@@ -1,1 +1,79 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IstFlix</title>
+<style>
+body{margin:0;background:#080808;color:white;font-family:Arial}
+header{display:flex;align-items:center;gap:20px;padding:18px 35px;background:#000;position:sticky;top:0;z-index:9}
+.logo{color:#e50914;font-size:34px;font-weight:bold}
+nav{display:flex;gap:18px;color:#ddd}
+input{margin-left:auto;background:#111;border:1px solid #555;color:white;padding:10px;border-radius:4px}
+.hero{padding:100px 40px;background:linear-gradient(90deg,#000 25%,#0006),url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?auto=format&fit=crop&w=1400&q=80') center/cover}
+.hero h1{font-size:60px;margin:0}
+button{background:#e50914;color:white;border:0;padding:12px 24px;border-radius:5px;font-weight:bold;cursor:pointer}
+section{padding:25px 35px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:15px}
+.card{background:#181818;border-radius:10px;overflow:hidden;cursor:pointer;transition:.2s}
+.card:hover{transform:scale(1.05)}
+.thumb{height:120px;background:#333 center/cover}
+.info{padding:12px}
+.modal{display:none;position:fixed;inset:0;background:#000d;place-items:center;z-index:99}
+.box{background:#111;max-width:800px;width:92%;border-radius:10px;overflow:hidden}
+video{width:100%}
+.close{float:right;margin:12px}
+@media(max-width:650px){nav{display:none}.hero h1{font-size:38px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">IstFlix</div>
+<nav><span>Home</span><span>Movies</span><span>Series</span><span>My List</span></nav>
+<input id="q" placeholder="Search..." oninput="render()">
+</header>
 
+<div class="hero">
+<h1>Unlimited Movies & Series</h1>
+<p>Watch your favorite videos anytime on IstFlix.</p>
+<button onclick="play(videos[0])">▶ Play Now</button>
+</div>
+
+<section>
+<h2>Popular Now</h2>
+<div class="grid" id="grid"></div>
+</section>
+
+<div class="modal" id="modal">
+<div class="box">
+<video id="player" controls></video>
+<button class="close" onclick="modal.style.display='none';player.pause()">Close</button>
+<h2 id="title" style="padding:15px"></h2>
+</div>
+</div>
+
+<script>
+const videos=[
+{t:"Big Buck Bunny",u:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",img:"https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&w=600&q=80"},
+{t:"Sintel",u:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",img:"https://images.unsplash.com/photo-1505686994434-e3cc5abf1330?auto=format&fit=crop&w=600&q=80"},
+{t:"Tears of Steel",u:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",img:"https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=600&q=80"},
+{t:"Action Movie",u:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",img:"https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=600&q=80"}
+];
+function render(){
+let s=q.value.toLowerCase();
+grid.innerHTML=videos.filter(v=>v.t.toLowerCase().includes(s)).map((v,i)=>`
+<div class="card" onclick="play(videos[${i}])">
+<div class="thumb" style="background-image:url('${v.img}')"></div>
+<div class="info"><b>${v.t}</b><br><small>HD • Movie</small></div>
+</div>`).join("");
+}
+function play(v){
+title.innerText=v.t;
+player.src=v.u;
+modal.style.display="grid";
+player.play();
+}
+render();
+</script>
+</body>
+</html>
