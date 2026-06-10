@@ -1,1 +1,75 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IstFlix Admin</title>
+<style>
+body{margin:0;background:#0b0b0b;color:white;font-family:Arial;padding:20px}
+h1{color:#e50914}
+input,select,button{width:100%;padding:12px;margin:8px 0;border-radius:6px;border:1px solid #444;background:#181818;color:white}
+button{background:#e50914;border:0;font-weight:bold}
+.card{background:#181818;padding:12px;border-radius:8px;margin:10px 0}
+a{color:#fff}
+</style>
+</head>
+<body>
+<h1>IstFlix Admin Panel</h1>
+<p><a href="index.html">← Back to Home</a></p>
 
+<input id="title" placeholder="Movie title">
+<input id="video" placeholder="MP4 video URL">
+<input id="thumb" placeholder="Thumbnail image URL">
+<select id="cat">
+<option>Movie</option>
+<option>Series</option>
+<option>Anime</option>
+</select>
+<button onclick="addMovie()">Add Movie</button>
+
+<h2>Movie List</h2>
+<div id="list"></div>
+
+<script>
+let movies=JSON.parse(localStorage.istflixMovies||"[]");
+
+function save(){
+  localStorage.istflixMovies=JSON.stringify(movies);
+  render();
+}
+
+function addMovie(){
+  if(!title.value||!video.value||!thumb.value){
+    alert("Title, Video URL, Thumbnail দিন");
+    return;
+  }
+  movies.unshift({
+    title:title.value,
+    video:video.value,
+    thumb:thumb.value,
+    cat:cat.value
+  });
+  title.value=video.value=thumb.value="";
+  save();
+}
+
+function delMovie(i){
+  if(confirm("Delete this movie?")){
+    movies.splice(i,1);
+    save();
+  }
+}
+
+function render(){
+  list.innerHTML=movies.map((m,i)=>`
+    <div class="card">
+      <b>${m.title}</b><br>
+      <small>${m.cat}</small><br>
+      <button onclick="delMovie(${i})">Delete</button>
+    </div>
+  `).join("") || "No movie added yet.";
+}
+render();
+</script>
+</body>
+</html>
